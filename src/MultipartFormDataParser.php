@@ -1,7 +1,7 @@
 <?php
 
 namespace Notihnio\MultipartFormDataParser;
-
+include ("./MultipartFormDataset.php");
 /**
  * Class MultipartFormDataParser
  *
@@ -77,6 +77,7 @@ class MultipartFormDataParser
                         }
                     }
                 }
+                $file["size"] = self::toFormattedBytes($file["size"]);
                 $_FILES[$headers['content-disposition']['name']] = $file;
                 $dataset->files[$headers['content-disposition']['name']] = $file;
             } else {
@@ -134,19 +135,16 @@ class MultipartFormDataParser
      * Taken from https://stackoverflow.com/questions/2510434/format-bytes-to-kilobytes-megabytes-gigabytes
      *
      * @param int $bytes
-     * @param int $precision
      *
      * @return string
      */
-    private static function toFormattedBytes(int $bytes, int $precision = 2) : string
+    private static function toFormattedBytes(int $bytes) : string
     {
-        $units = array('B', 'KB', 'MB', 'GB', 'TB');
+        $precision = 2;
+        $base = log($bytes, 1024);
+        $suffixes = array('', 'K', 'M', 'G', 'T');
 
-        $bytes = max($bytes, 0);
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-        $pow = min($pow, count($units) - 1);
-
-        return round($bytes, $precision) . ' ' . $units[$pow];
+        return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
     }
 
 
@@ -179,3 +177,6 @@ class MultipartFormDataParser
         return $number * (1024 ** $exponent);
     }
 }
+
+$req = MultipartFormDataParser::parse();
+die(var_dump($req));
