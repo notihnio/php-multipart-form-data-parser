@@ -5,7 +5,7 @@ The missing php functionality to support put, patch, delete, etc multipart reque
 ## Install
 
 ```
-composer require notihnio/php-mutlipart-form-data-parser:1.0.3
+composer require notihnio/php-mutlipart-form-data-parser:1.0.0
 ```
 ## Usage
 
