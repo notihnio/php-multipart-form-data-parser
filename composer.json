@@ -1,0 +1,21 @@
+{
+    "name": "notihnio/mutlipart-form-data-parser",
+    "description": "Parses multipart request data.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Notis Mastrandrikos",
+            "email": "pmastrandrikos@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Notihnio\\MultipartFormDataParser\\": ""
+        }
+    },
+    "require": {
+        "php": ">=7.1"
+    },
+    "minimum-stability": "dev"
+}
