@@ -88,7 +88,7 @@ class MultipartFormDataParser
                 $dataset->params[$headers['content-disposition']['name']] = $value;
 
                 if ($method !="POST" && $method != "GET") {
-                    $GLOBALS["_".$method]['name'] = $value;
+                    $GLOBALS["_".$method][$headers['content-disposition']['name']] = $value;
                 }
             }
         }
