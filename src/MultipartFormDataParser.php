@@ -1,7 +1,7 @@
 <?php
 
 namespace Notihnio\MultipartFormDataParser;
-include ("./MultipartFormDataset.php");
+
 /**
  * Class MultipartFormDataParser
  *
