@@ -180,6 +180,3 @@ class MultipartFormDataParser
         return $number * (1024 ** $exponent);
     }
 }
-
-$req = MultipartFormDataParser::parse();
-die(var_dump($req));
