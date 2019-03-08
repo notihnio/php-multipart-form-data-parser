@@ -1,4 +1,4 @@
-# Multipart Form Data Parser
+# PHP Multipart Form Data Parser
 
 The missing php functionality to support put, patch, delete, etc multipart requests handling 
 
