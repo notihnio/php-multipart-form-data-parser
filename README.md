@@ -10,7 +10,7 @@ composer require notihnio/php-mutlipart-form-data-parser:1.0.2
 ## Usage
 
 ```
-use namespace Notihnio\MultipartFormDataParser;
+use Notihnio\MultipartFormDataParser;
 
 $request = MultipartFormDataParser::parse();
 
@@ -23,7 +23,7 @@ $files = $request->files;
 
 ## Atlernative Usage
 ```
-use namespace Notihnio\MultipartFormDataParser;
+use Notihnio\MultipartFormDataParser;
 
 MultipartFormDataParser::parse();
 
