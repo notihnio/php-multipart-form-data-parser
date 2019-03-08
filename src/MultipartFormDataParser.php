@@ -21,6 +21,9 @@ class MultipartFormDataParser
             return $dataset;
         }
 
+        if ($method == "GET") {
+            return $dataset;
+        }
 
         $GLOBALS["_".$method] = [];
 
