@@ -2,6 +2,8 @@
 
 The missing php functionality to support put, patch, delete, etc multipart requests handling 
 
+this package is part of notihnio/php-request-parser (https://github.com/notihnio/php-request-parser)
+which provide full support to PUT PATCH DELETE OPTIONS HEAD TRACE requests 
 ## Install
 
 ```
