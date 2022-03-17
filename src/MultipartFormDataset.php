@@ -13,11 +13,11 @@ class MultipartFormDataset
      * @var array
      * request's files array
      */
-    public  $files = [];
+    public array $files = [];
 
     /**
      * @var array
      * request's params array
      */
-    public $params = [];
+    public array $params = [];
 }

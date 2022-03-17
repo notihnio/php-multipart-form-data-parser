@@ -1,6 +1,8 @@
 <?php
 
 namespace Notihnio\MultipartFormDataParser;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Illuminate\Http\Request as LaravelRequest;
 
 /**
  * Class MultipartFormDataParser
@@ -10,30 +12,42 @@ namespace Notihnio\MultipartFormDataParser;
 class MultipartFormDataParser
 {
 
-    public static function parse() : ?MultipartFormDataset
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request|\Illuminate\Http\Request|null $request
+     *
+     * @return \Notihnio\MultipartFormDataParser\MultipartFormDataset|null
+     */
+    public static function parse(SymfonyRequest|LaravelRequest|null $request = null) : ?MultipartFormDataset
     {
-        $method = strtoupper($_SERVER['REQUEST_METHOD']);
+        $method = (is_null($request)) ? strtoupper($_SERVER['REQUEST_METHOD']) : $request->getMethod();
         $dataset = new MultipartFormDataset();
 
-        if ($method == "POST") {
+        if ($method === "POST") {
             $dataset->files = $_FILES;
             $dataset->params = $_POST;
             return $dataset;
         }
 
-        if ($method == "GET") {
+        if ($method === "GET") {
             return $dataset;
         }
 
         $GLOBALS["_".$method] = [];
 
         //get raw input data
-        $rawRequestData = file_get_contents("php://input");
+        $rawRequestData = (is_null($request)) ? file_get_contents("php://input") : $request->getContent(true);
         if (empty($rawRequestData)) {
             return null;
         }
 
-        $contentType = $_SERVER["CONTENT_TYPE"];
+        $contentType = "";
+        if (is_null($request)) {
+            if (array_key_exists("CONTENT_TYPE", $_SERVER)) {
+                $contentType = strtolower($_SERVER["CONTENT_TYPE"]);
+            }
+        } else {
+            $contentType = $request->getContentType();
+        }
 
         if (!preg_match('/boundary=(.*)$/is', $contentType, $matches)) {
             return null;
@@ -47,7 +61,7 @@ class MultipartFormDataParser
             if (empty($bodyPart)) {
                 continue;
             }
-            list($headers, $value) = preg_split('/\\R\\R/', $bodyPart, 2);
+            [$headers, $value] = preg_split('/\\R\\R/', $bodyPart, 2);
             $headers =self::parseHeaders($headers);
             if (!isset($headers['content-disposition']['name'])) {
                 continue;
@@ -87,7 +101,7 @@ class MultipartFormDataParser
                 //parameters
                 $dataset->params[$headers['content-disposition']['name']] = $value;
 
-                if ($method !="POST" && $method != "GET") {
+                if ($method !== "POST" && $method !== "GET") {
                     $GLOBALS["_".$method][$headers['content-disposition']['name']] = $value;
                 }
             }
@@ -98,7 +112,8 @@ class MultipartFormDataParser
 
     /**
      * Parses body param headers
-     * @param $headerContent
+     *
+     * @param string $headerContent
      *
      * @return array
      */
@@ -107,22 +122,22 @@ class MultipartFormDataParser
         $headers = [];
         $headerParts = preg_split('/\\R/s', $headerContent, -1, PREG_SPLIT_NO_EMPTY);
         foreach ($headerParts as $headerPart) {
-            if (strpos($headerPart, ':') === false) {
+            if (!str_contains($headerPart, ':')) {
                 continue;
             }
-            list($headerName, $headerValue) = explode(':', $headerPart, 2);
+            [$headerName, $headerValue] = explode(':', $headerPart, 2);
             $headerName = strtolower(trim($headerName));
             $headerValue = trim($headerValue);
-            if (strpos($headerValue, ';') === false) {
+            if (!str_contains($headerValue, ';')) {
                 $headers[$headerName] = $headerValue;
             } else {
                 $headers[$headerName] = [];
                 foreach (explode(';', $headerValue) as $part) {
                     $part = trim($part);
-                    if (strpos($part, '=') === false) {
+                    if (!str_contains($part, '=')) {
                         $headers[$headerName][] = $part;
                     } else {
-                        list($name, $value) = explode('=', $part, 2);
+                        [$name, $value] = explode('=', $part, 2);
                         $name = strtolower(trim($name));
                         $value = trim(trim($value), '"');
                         $headers[$headerName][$name] = $value;
@@ -147,7 +162,7 @@ class MultipartFormDataParser
         $base = log($bytes, 1024);
         $suffixes = array('', 'K', 'M', 'G', 'T');
 
-        return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
+        return round(1024 ** ($base - floor($base)), $precision) . $suffixes[floor($base)];
     }
 
 
@@ -165,7 +180,7 @@ class MultipartFormDataParser
         $suffix = preg_replace("/[^a-zA-Z]+/", "", $formattedBytes);
 
         //B or no suffix
-        if(is_numeric(substr($suffix, 0, 1))) {
+        if(is_numeric($suffix[0])) {
             return preg_replace('/[^\d]/', '', $formattedBytes);
         }
 
