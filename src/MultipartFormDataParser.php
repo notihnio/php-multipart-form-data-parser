@@ -55,7 +55,7 @@ class MultipartFormDataParser
         $GLOBALS["_".$method] = [];
 
         //get raw input data
-        $rawRequestData = (is_null($request)) ? file_get_contents("php://input") : $request->getContent(true);
+        $rawRequestData = (is_null($request)) ? file_get_contents("php://input") : $request->getContent();
         if (empty($rawRequestData)) {
             return null;
         }
