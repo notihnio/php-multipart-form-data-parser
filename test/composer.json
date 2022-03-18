@@ -1,0 +1,15 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Notihnio\\RequestParser\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=8.0",
+        "notihnio/php-request-parser": "master",
+        "illuminate/http": "^9.0",
+        "phpunit/phpunit": "^9.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "minimum-stability": "dev"
+}

@@ -20,4 +20,14 @@ class MultipartFormDataset
      * request's params array
      */
     public array $params = [];
+
+    /**
+     * @var array
+     */
+    public array $cookies = [];
+
+    /**
+     * @var array
+     */
+    public array $headers = [];
 }

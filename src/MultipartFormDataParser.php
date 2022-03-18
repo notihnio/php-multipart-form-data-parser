@@ -1,6 +1,7 @@
 <?php
 
 namespace Notihnio\MultipartFormDataParser;
+use Notihnio\RequestParser\RequestDataset;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Illuminate\Http\Request as LaravelRequest;
 
@@ -19,16 +20,35 @@ class MultipartFormDataParser
      */
     public static function parse(SymfonyRequest|LaravelRequest|null $request = null) : ?MultipartFormDataset
     {
+        //find method
         $method = (is_null($request)) ? strtoupper($_SERVER['REQUEST_METHOD']) : $request->getMethod();
         $dataset = new MultipartFormDataset();
 
+        //find headers
+        $headers = (is_null($request)) ? getallheaders() : self::parseSymfonyHeaders($request);
+        $headers = array_change_key_case($headers, CASE_LOWER);
+
+        $dataset->headers = $headers;
+
+        //get cookies
+        $cookies = (is_null($request)) ? $_COOKIE : $request->cookies->all();
+        $cookies = array_change_key_case($cookies, CASE_LOWER);
+        $dataset->cookies = $cookies;
+
+        $contentType = (array_key_exists("content-type", $dataset->headers)) ? $dataset->headers["content-type"] : "";
+        $dataset = new MultipartFormDataset();
+
         if ($method === "POST") {
-            $dataset->files = $_FILES;
-            $dataset->params = $_POST;
+            $dataset->files = (is_null($request)) ? $_FILES : $request->files->all();
+            $dataset->params = (is_null($request)) ? $_POST : $request->request->all();
             return $dataset;
         }
 
         if ($method === "GET") {
+            $dataset->params = (is_null($request)) ? $_GET : $request->query->all();
+            if (!is_null($request)) {
+                $GLOBALS["_".$method] = $request->query->all();
+            }
             return $dataset;
         }
 
@@ -38,15 +58,6 @@ class MultipartFormDataParser
         $rawRequestData = (is_null($request)) ? file_get_contents("php://input") : $request->getContent(true);
         if (empty($rawRequestData)) {
             return null;
-        }
-
-        $contentType = "";
-        if (is_null($request)) {
-            if (array_key_exists("CONTENT_TYPE", $_SERVER)) {
-                $contentType = strtolower($_SERVER["CONTENT_TYPE"]);
-            }
-        } else {
-            $contentType = $request->getContentType();
         }
 
         if (!preg_match('/boundary=(.*)$/is', $contentType, $matches)) {
@@ -193,5 +204,18 @@ class MultipartFormDataParser
             return null;
         }
         return $number * (1024 ** $exponent);
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request|\Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    private static function parseSymfonyHeaders(SymfonyRequest|LaravelRequest $request) : array {
+        $headers = [];
+        foreach ($request->headers->all() as $headerName => $header) {
+            $headers[$headerName] = (is_array($header)) ? $header[0] : $header;
+        }
+        return $headers;
     }
 }
