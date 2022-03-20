@@ -1,0 +1,53 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup PHP with exceptions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+          ini-values: opcache.enable_cli=1, opcache.enable=1, opcache.jit=tracing, opcache.jit_buffer_size=64M
+          extensions: mbstring
+
+      - uses: actions/checkout@v2
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        run: composer install --working-dir=${GITHUB_WORKSPACE}/test --prefer-dist --no-progress
+
+      - name: Run test web server
+        run: php -S localhost:3000 ${GITHUB_WORKSPACE}/test/website.php > ${GITHUB_WORKSPACE}/test/website-log 2>&1 &
+
+      - name: Run laravel test web server
+        run: php -S localhost:3001 ${GITHUB_WORKSPACE}/test/laravelWebsite.php > ${GITHUB_WORKSPACE}/test/laravelWebsite-log 2>&1 &
+
+      - name: Run symfony test web server
+        run: php -S localhost:3002 ${GITHUB_WORKSPACE}/test/symfonyWebsite.php > ${GITHUB_WORKSPACE}/test/symfonyWebsite-log 2>&1 &
+
+      - name: Run wait until servers are ready
+        run: sleep 15
+
+      - name: Run tests
+        run: php ${GITHUB_WORKSPACE}/test/vendor/phpunit/phpunit/phpunit --configuration ${GITHUB_WORKSPACE}/test/phpunit.xml
