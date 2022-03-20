@@ -1,6 +1,6 @@
 {
     "name": "notihnio/php-multipart-form-data-parser",
-    "description": "The missing php functionality to support put, patch, delete, etc multipart requests handling",
+    "description": "The missing php functionality to support put, patch, delete, put FORM and MULTIPART requests handling",
     "type": "library",
     "license": "MIT",
     "authors": [

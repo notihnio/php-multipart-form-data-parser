@@ -1,6 +1,6 @@
 # PHP Multipart Form Data Parser
 
-The missing php functionality to support put, patch, delete, etc multipart requests handling 
+The missing php functionality to support **put**, **patch**, **delete**, **put**, **FORM** and **MULTIPART** requests handling
 
 this package is part of notihnio/php-request-parser (https://github.com/notihnio/php-request-parser)
 which provides full support to PUT PATCH DELETE OPTIONS HEAD TRACE requests 
