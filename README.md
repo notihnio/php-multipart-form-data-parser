@@ -4,6 +4,15 @@ The missing php functionality to support **put**, **patch**, **delete**, **put**
 
 this package is part of notihnio/php-request-parser (https://github.com/notihnio/php-request-parser)
 which provides full support to PUT PATCH DELETE OPTIONS HEAD TRACE requests 
+
+[![Latest Stable Version](http://poser.pugx.org/notihnio/php-multipart-form-data-parser/v)](https://packagist.org/packages/notihnio/php-multipart-form-data-parser)
+[![Total Downloads](http://poser.pugx.org/notihnio/php-multipart-form-data-parser/downloads)](https://packagist.org/packages/notihnio/php-multipart-form-data-parser)
+[![License](http://poser.pugx.org/notihnio/php-multipart-form-data-parser/license)](https://packagist.org/packages/notihnio/php-multipart-form-data-parser)
+[![Version](http://poser.pugx.org/notihnio/php-multipart-form-data-parser/version)](https://packagist.org/packages/notihnio/php-multipart-form-data-parser)
+[![PHP Version Require](http://poser.pugx.org/notihnio/php-multipart-form-data-parser/require/php)](https://packagist.org/packages/notihnio/php-multipart-form-data-parser)
+![example workflow](https://github.com/notihnio/php-multipart-form-data-parser/actions/workflows/run_tests.yml/badge.svg)
+
+
 ## Install
 
 ```
