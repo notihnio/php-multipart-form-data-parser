@@ -6,7 +6,7 @@
     },
     "require": {
         "php": ">=8.0",
-        "notihnio/php-request-parser": "master",
+        "notihnio/php-request-parser": "2.0",
         "illuminate/http": "^9.0",
         "phpunit/phpunit": "^9.0",
         "guzzlehttp/guzzle": "^7.0"
