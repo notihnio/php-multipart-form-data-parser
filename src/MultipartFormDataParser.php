@@ -38,12 +38,6 @@ class MultipartFormDataParser
         $contentType = (array_key_exists("content-type", $dataset->headers)) ? $dataset->headers["content-type"] : "";
         $dataset = new MultipartFormDataset();
 
-        if ($method === "POST") {
-            $dataset->files = (is_null($request)) ? $_FILES : $request->files->all();
-            $dataset->params = (is_null($request)) ? $_POST : $request->request->all();
-            return $dataset;
-        }
-
         if ($method === "GET") {
             $dataset->params = (is_null($request)) ? $_GET : $request->query->all();
             if (!is_null($request)) {
@@ -52,10 +46,18 @@ class MultipartFormDataParser
             return $dataset;
         }
 
+        //if is not a framework and a post request
+        if ($method === "POST" && is_null($request)) {
+            $dataset->files = (is_null($request)) ? $_FILES : $request->files->all();
+            $dataset->params = (is_null($request)) ? $_POST : $request->request->all();
+            return $dataset;
+        }
+
         $GLOBALS["_".$method] = [];
 
         //get raw input data
         $rawRequestData = (is_null($request)) ? file_get_contents("php://input") : $request->getContent();
+
         if (empty($rawRequestData) || $rawRequestData === "{}") {
             //road runner returns empty content, fallback to framework defaults
             if (!is_null($request)) {

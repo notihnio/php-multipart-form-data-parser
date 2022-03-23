@@ -68,6 +68,7 @@ class RequestsTest extends TestCase
             ]
         );
 
+        $a = $response->getBody()->getContents();
         $responseData = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(4, $responseData);
