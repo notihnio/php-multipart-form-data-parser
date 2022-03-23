@@ -56,7 +56,21 @@ class MultipartFormDataParser
 
         //get raw input data
         $rawRequestData = (is_null($request)) ? file_get_contents("php://input") : $request->getContent();
-        if (empty($rawRequestData)) {
+        if (empty($rawRequestData) || $rawRequestData === "{}") {
+            //road runner returns empty content, fallback to framework defaults
+            if (!is_null($request)) {
+                foreach ($request->files->all() as $name => $file) {
+                    $dataset->files[$name] = [
+                        'name' => $file->getClientOriginalName(),
+                        'type' => $file->getMimeType(),
+                        'size' => $file->getSize(),
+                        'error' => $file->getError(),
+                        'tmp_name' => $file->getRealPath(),
+                    ];
+                }
+                $dataset->params = $request->request->all();
+                return $dataset;
+            }
             return null;
         }
 
