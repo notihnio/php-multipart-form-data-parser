@@ -71,7 +71,7 @@ class SymfonyRequestsTest extends TestCase
         $responseData = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(4, $responseData);
-        $this->assertCount(5, $responseData["files"]["iconFile"]);
+        $this->assertCount(6, $responseData["files"]["iconFile"]);
         $this->assertEquals("icon.png", $responseData["files"]["iconFile"]["name"]);
         $this->assertEquals("image/png", $responseData["files"]["iconFile"]["type"]);
         $this->assertNotNull($responseData["files"]["iconFile"]["tmp_name"]);

@@ -117,7 +117,7 @@ class MultipartFormDataParser
 
         //roadrunner provide typical multipart body - variables and fiels are provided by framework request instances
         if (!is_null($request) &&
-            (count($dataset->files) !== count($request->files->all()) || count($dataset->params) !== count($request->all()))
+            (count($dataset->files) < count($request->files->all()) || count($dataset->params) < count($request->all()))
         ) {
             $dataset->files = self::getFilesFromProvidedRequest($request);
             $dataset->params = $request->all();
