@@ -57,25 +57,6 @@ class MultipartFormDataParser
 
         //get raw input data
         $rawRequestData = (is_null($request)) ? file_get_contents("php://input") : $request->getContent();
-
-        if (empty($rawRequestData) || $rawRequestData === "{}") {
-            //road runner returns empty content, fallback to framework defaults
-            if (!is_null($request)) {
-                foreach ($request->files->all() as $name => $file) {
-                    $dataset->files[$name] = [
-                        'name' => $file->getClientOriginalName(),
-                        'type' => $file->getMimeType(),
-                        'size' => $file->getSize(),
-                        'error' => $file->getError(),
-                        'tmp_name' => $file->getRealPath(),
-                    ];
-                }
-                $dataset->params = $request->request->all();
-                return $dataset;
-            }
-            return null;
-        }
-
         if (!preg_match('/boundary=(.*)$/is', $contentType, $matches)) {
             return null;
         }
@@ -132,6 +113,14 @@ class MultipartFormDataParser
                     $GLOBALS["_".$method][$headers['content-disposition']['name']] = $value;
                 }
             }
+        }
+
+        //roadrunner provide typical multipart body - variables and fiels are provided by framework request instances
+        if (!is_null($request) &&
+            (count($dataset->files) !== count($request->files->all()) || count($dataset->params) !== count($request->all()))
+        ) {
+            $dataset->files = self::getFilesFromProvidedRequest($request);
+            $dataset->params = $request->all();
         }
         return $dataset;
     }
@@ -233,5 +222,20 @@ class MultipartFormDataParser
             $headers[$headerName] = (is_array($header)) ? $header[0] : $header;
         }
         return $headers;
+    }
+
+    private static function getFilesFromProvidedRequest(SymfonyRequest|LaravelRequest $request) : array
+    {
+        $files = [];
+        foreach ($request->files->all() as $name => $file) {
+            $files[$name] = [
+                'name' => $file->getClientOriginalName(),
+                'type' => $file->getMimeType(),
+                'size' => $file->getSize(),
+                'error' => $file->getError(),
+                'tmp_name' => $file->getRealPath(),
+            ];
+        }
+        return $files;
     }
 }
