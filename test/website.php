@@ -3,8 +3,8 @@
 // Autoload files using Composer autoload
 require_once __DIR__.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
-use Notihnio\RequestParser\RequestParser;
-$request = RequestParser::parse();
+use \Notihnio\MultipartFormDataParser\MultipartFormDataParser;
+$request = MultipartFormDataParser::parse();
 
 $files = $request->files;
 foreach ($files as $key => $file) {

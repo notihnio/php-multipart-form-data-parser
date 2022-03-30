@@ -6,10 +6,14 @@
     },
     "require": {
         "php": ">=8.0",
-        "notihnio/php-request-parser": "^2.0",
+        "notihnio/php-multipart-form-data-parser": "master",
         "illuminate/http": "^9.0",
         "phpunit/phpunit": "^9.0",
         "guzzlehttp/guzzle": "^7.0"
+    }
+    ,
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
     },
     "minimum-stability": "dev"
 }

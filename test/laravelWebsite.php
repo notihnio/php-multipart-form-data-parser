@@ -3,10 +3,10 @@
 // Autoload files using Composer autoload
 require_once __DIR__.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
-use Notihnio\RequestParser\RequestParser;
+use \Notihnio\MultipartFormDataParser\MultipartFormDataParser;
 
 $laravelRequest = \Illuminate\Http\Request::createFromGlobals();
-$request = RequestParser::parse($laravelRequest);
+$request = MultipartFormDataParser::parse($laravelRequest);
 
 $files = $request->files;
 foreach ($files as $key => $file) {
