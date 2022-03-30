@@ -3,10 +3,10 @@
 // Autoload files using Composer autoload
 require_once __DIR__.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
-use \Notihnio\MultipartFormDataParser\MultipartFormDataParser;
+use Notihnio\RequestParser\RequestParser;
 
 $symfonyRequest = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
-$request = MultipartFormDataParser::parse($symfonyRequest);
+$request = RequestParser::parse($symfonyRequest);
 
 $files = $request->files;
 foreach ($files as $key => $file) {
