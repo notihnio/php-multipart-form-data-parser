@@ -16,7 +16,7 @@ which provides full support to PUT PATCH DELETE OPTIONS HEAD TRACE requests
 ## Install
 
 ```
-composer require notihnio/php-mutlipart-form-data-parser:^2.0
+composer require composer require notihnio/php-multipart-form-data-parser:^2.0
 ```
 ## Usage
 
